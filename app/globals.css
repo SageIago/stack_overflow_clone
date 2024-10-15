@@ -47,7 +47,7 @@ body {
   }
 
   .no-focus {
-    @apply focus-visible:ring-0 focus-visible:ring-transparent focus;
+    @apply focus-visible:ring-0 focus-visible:ring-transparent;
   }
   .active-theme {
     filter: invert(53%) sepia(98%) saturate(3332%) hue-rotate(0deg)
@@ -64,7 +64,7 @@ body {
     background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%);
     -webkit-background-clip: text;
     background-clip: text;
-    text-webkit-text-fill-color: transparent;
+    /* webkit-text-fill-color: transparent; */
   }
   .custom-scrollbar::-webkit-scrollbar {
     width: 3px;
@@ -131,4 +131,3 @@ body {
     scrollbar-width: none; /* Firefox */
   }
 }
-

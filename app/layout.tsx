@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ReactNode } from "react";
 // eslint-disable-next-line camelcase
 import { Space_Grotesk, Inter } from "next/font/google";
+import ThemeProvider from "@/context/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,7 +41,9 @@ export default function RootLayout({
         <body
           className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
         >
+          <ThemeProvider>
           {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
