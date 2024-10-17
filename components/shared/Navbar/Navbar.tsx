@@ -13,7 +13,7 @@ const Navbar = () => {
         <Image src={Logo} alt="DevFlow" width={23} height={23} />
 
         <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
-          Dev <span className="text-primary-500">OverFlow</span>
+          Dev<span className="text-primary-500">OverFlow</span>
         </p>
       </Link>
 
