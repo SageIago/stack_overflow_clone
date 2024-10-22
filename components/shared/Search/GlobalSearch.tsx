@@ -1,3 +1,5 @@
+"use client"
+
 import Image from "next/image";
 import SearchIcon from "@/app/public/assets/icons/search.svg";
 import { Input } from "@/components/ui/input";

@@ -4,7 +4,7 @@ import Logo from "@/app/public/assets/images/site-logo.svg";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import Theme from "./Theme";
 import MobileNav from "./MobileNav";
-import GlobalSearch from "./GlobalSearch";
+import GlobalSearch from "../Search/GlobalSearch";
 
 const Navbar = () => {
   return (
