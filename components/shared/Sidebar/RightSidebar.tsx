@@ -6,51 +6,51 @@ import RenderTags from "../RenderTags";
 const RightSidebar = () => {
   const hotQuestions = [
     {
-      _id: 1,
+      _id: "1",
       title: "How to create a custom hook in React?",
     },
     {
-      _id: 2,
+      _id: "2",
       title: "Cascading Sheets in SQL Alchemy",
     },
     {
-      _id: 3,
+      _id: "3",
       title:
         "Would it be appropriate to point out an error in another paper during a referee report?",
     },
     {
-      _id: 4,
+      _id: "4",
       title: "How can an airconditioning machine exist?",
     },
     {
-      _id: 5,
+      _id: "5",
       title: "What is an example of 3 numbers that do not make up a vector?",
     },
   ];
 
   const popularTags = [
     {
-      _id: 1,
+      _id: "1",
       name: "React",
       totalQuestions: 15,
     },
     {
-      _id: 2,
+      _id: "2",
       name: "Python",
       totalQuestions: 15,
     },
     {
-      _id: 3,
+      _id: "3",
       name: "JavaScript",
       totalQuestions: 5,
     },
     {
-      _id: 4,
+      _id: "4",
       name: "SQL",
       totalQuestions: 5,
     },
     {
-      _id: 5,
+      _id: "5",
       name: "Node.js",
       totalQuestions: 150,
     },
