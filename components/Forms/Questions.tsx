@@ -22,6 +22,8 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import CloseIcon from "@/app/public/assets/icons/close.svg";
 
+const Type: any = "Create"
+
 const Questions = () => {
   const editorRef = useRef(null);
   const [isSubmitting, setisSubmitting] = useState(false)
@@ -39,7 +41,23 @@ const Questions = () => {
   function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+
+    setisSubmitting(true);
+    
+    try {
+      // This Form is built for Scalability
+
+      // Make an async request to your API( which is the midpoint between the frontend and the backend)
+      // This is where you make your API request to the backend - Create a new question
+
+
+      // Navigate back to the homepage
+
+    } catch(error) {
+
+    } finally {
+      setisSubmitting(false);
+    }
   }
 
   function handleInputKeyDown (
@@ -215,7 +233,17 @@ const Questions = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="primary-gradient mt-3 w-fit rounded-[10px] !text-light-900">Submit</Button>
+        <Button type="submit" className="primary-gradient mt-3 w-fit rounded-[10px] !text-light-900" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              {Type === "Edit" ? "Editing" : "Posting..."}
+            </>
+          ): (
+              <>
+                {Type === "Edit" ? "Edit Question" : "Ask a Question"}
+              </>
+          )}
+        </Button>
       </form>
     </Form>
   );
