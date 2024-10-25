@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client";
 
@@ -16,17 +17,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { QuestionsSchema } from "@/lib/actions/validation";
+import { QuestionsSchema } from "@/lib/validation";
 import React, { useRef, useState } from "react";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import CloseIcon from "@/app/public/assets/icons/close.svg";
+import { CreateQuestion } from "@/lib/actions/question.action";
+import { useRouter, usePathname } from "next/navigation";
 
 const Type: any = "Create"
 
-const Questions = () => {
+interface Props {
+  mongoUserId: string;
+}
+
+const Questions = ({mongoUserId}: Props) => {
   const editorRef = useRef(null);
   const [isSubmitting, setisSubmitting] = useState(false)
+  const pathname = usePathname();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
@@ -38,7 +47,7 @@ const Questions = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
 
@@ -49,12 +58,16 @@ const Questions = () => {
 
       // Make an async request to your API( which is the midpoint between the frontend and the backend)
       // This is where you make your API request to the backend - Create a new question
-
-
+      await CreateQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId)
+      })
       // Navigate back to the homepage
-
+      router.push("/");
     } catch(error) {
-
+        console.log(error);
     } finally {
       setisSubmitting(false);
     }
@@ -143,6 +156,8 @@ const Questions = () => {
                     // @ts-expect-error-NotFinished
                     (editorRef.current = editor)
                   }
+                  onBlur={field.onBlur}
+                  onEditorChange={(content)=> field.onChange(content)}
                   initialValue=""
                   init={{
                     height: 350,
