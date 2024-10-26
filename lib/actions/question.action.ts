@@ -3,9 +3,26 @@
 import Question from "@/database/question.model";
 import { ConnectToDatabase } from "../mongoose";
 import Tag from "@/database/tag.model";
+import { CreateQuestionParams, GetQuestionParams} from "./shared.types";
+import User from "@/database/user.model";
+
+export async function GetQuestions(params: GetQuestionParams) {
+  try {
+    // When fetching from the database, always connect first
+    ConnectToDatabase();
+
+    const questions = await Question.find({})
+      .populate({ path: "tags", model: Tag })
+      .populate({ path: "author", model: User });
+
+    return { questions }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function CreateQuestion(params: any) {
+export async function CreateQuestion(params: CreateQuestionParams) {
   // eslint-disable-next-line no-empty
   try {
     // This Function has to connect to the DB
