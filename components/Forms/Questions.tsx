@@ -23,7 +23,7 @@ import { Badge } from "../ui/badge";
 import Image from "next/image";
 import CloseIcon from "@/app/public/assets/icons/close.svg";
 import { CreateQuestion } from "@/lib/actions/question.action";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Type: any = "Create"
 
@@ -34,7 +34,6 @@ interface Props {
 const Questions = ({mongoUserId}: Props) => {
   const editorRef = useRef(null);
   const [isSubmitting, setisSubmitting] = useState(false)
-  const pathname = usePathname();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
