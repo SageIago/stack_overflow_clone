@@ -10,43 +10,6 @@ import QuestionCard from "@/components/Cards/QuestionCard";
 import { GetQuestions } from "@/lib/actions/question.action";
 
 const Home = async () => {
-  const questions = [
-    {
-      _id: "1",
-      title: "How to use React Router",
-      tags: [
-        { _id: "1", name: "React" },
-        { _id: "2", name: "React Router" },
-      ],
-      author: {
-        _id: "a1",
-        name: "John Doe",
-        picture: "https://example.com/johndoe.jpg",
-      },
-      upvotes: 1000000000,
-      views: 205678,
-      answers: [{}, {}, {}, {}, {}],
-      createdAt: new Date("2021-09-01T00:00:00.000Z"),
-    },
-    {
-      _id: "2",
-      title: "Destructuring in React",
-      tags: [
-        { _id: "1", name: "React" },
-        { _id: "2", name: "ReactDOM" },
-      ],
-      author: {
-        _id: "a2",
-        name: "Brad Traversy",
-        picture: "https://example.com/bradtraversy.jpg",
-      },
-      upvotes: 1034567,
-      views: 2012432,
-      answers: [{}, {}, {}, {}, {}],
-      createdAt: new Date("2021-09-01T00:00:00.000Z"),
-    },
-  ];
-
 
   const results = await GetQuestions({})
 

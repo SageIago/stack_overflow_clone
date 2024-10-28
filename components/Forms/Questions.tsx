@@ -62,7 +62,8 @@ const Questions = ({mongoUserId}: Props) => {
         title: values.title,
         content: values.explanation,
         tags: values.tags,
-        author: JSON.parse(mongoUserId)
+        author: JSON.parse(mongoUserId),
+        path: ""
       })
       // Navigate back to the homepage
       router.push("/");
