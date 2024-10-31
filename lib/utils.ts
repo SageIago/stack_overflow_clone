@@ -38,4 +38,9 @@ export function formatNumber(num: number): string {
   }
 }
 
+export function ShortenUsername(username: string): string {
+  return typeof username === "string" && username.length > 10
+    ? username.slice(0, 7) + "..."
+    : String(username);
+}
 
