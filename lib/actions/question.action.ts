@@ -4,8 +4,13 @@
 import Question from "@/database/question.model";
 import { ConnectToDatabase } from "../mongoose";
 import Tag from "@/database/tag.model";
-import { CreateQuestionParams, GetQuestionParams} from "./shared.types";
+import {
+  CreateQuestionParams,
+  GetQuestionParams,
+  GetQuestionByIdParams,
+} from "./shared.types";
 import User from "@/database/user.model";
+import { revalidatePath } from "next/cache";
 
 export async function GetQuestions(params: GetQuestionParams) {
   try {
@@ -14,9 +19,10 @@ export async function GetQuestions(params: GetQuestionParams) {
 
     const questions = await Question.find({})
       .populate({ path: "tags", model: Tag })
-      .populate({ path: "author", model: User });
+      .populate({ path: "author", model: User })
+      .sort({ createdAt: -1 })
 
-    return { questions }
+    return { questions };
   } catch (error) {
     console.log(error);
   }
@@ -31,7 +37,7 @@ export async function CreateQuestion(params: CreateQuestionParams) {
 
     // Destructure the params
 
-    const { title, content, tags, author } = params;
+    const { title, content, tags, author, path} = params;
 
     // Create a new Question
     const question = await Question.create({
@@ -59,7 +65,33 @@ export async function CreateQuestion(params: CreateQuestionParams) {
       await Question.findByIdAndUpdate(question._id, {
         $push: { tags: { $each: tagDocuments } },
       });
+
+      revalidatePath(path);
     }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function GetQuestionById(params: GetQuestionByIdParams) {
+  try {
+    ConnectToDatabase();
+
+    const { questionId } = params;
+
+    const specificQuestions = await Question.findById(questionId)
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "_id name",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+
+      return specificQuestions
   } catch (error) {
     console.log(error);
   }

@@ -71,9 +71,9 @@ const QuestionCard = ({
         />
         <Metric
           imgUrl={MessageIcon}
-          alt={"UpVotes"}
+          alt={"Message"}
           value={formatNumber(answers.length)}
-          title={" Votes"}
+          title={" Answers"}
           textStyles={"small-medium text-dark400_light700"}
         />
         <Metric

@@ -24,6 +24,7 @@ import Image from "next/image";
 import CloseIcon from "@/app/public/assets/icons/close.svg";
 import { CreateQuestion } from "@/lib/actions/question.action";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 const Type: any = "Create"
 
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const Questions = ({mongoUserId}: Props) => {
+  const { mode } = useTheme()
   const editorRef = useRef(null);
   const [isSubmitting, setisSubmitting] = useState(false)
   const router = useRouter();
@@ -147,7 +149,7 @@ const Questions = ({mongoUserId}: Props) => {
           render={({ field }) => (
             <FormItem className="flex w-full flex-col">
               <FormLabel className="paragraph-semibold text-dark400_light900 mt-4">
-                Question Title <span className="text-primary-500">*</span>
+                Explanation of the Problem<span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl className="mt-3.5">
                 <Editor
@@ -187,7 +189,9 @@ const Questions = ({mongoUserId}: Props) => {
                       "codesample | bold italic forecolor | alignleft aligncenter " +
                       "alignright alignjustify | bullist numlist",
                     content_style:
-                      "body { font-family:Inter; font-size: 16px }",
+                      "body { font-family:Inter; font-size: 16px ;}",
+                    skin: mode === "dark" ? "oxide-dark" : "oxide",
+                    content_css: mode === "dark" ? "dark" : "light"
                   }}
                 />
               </FormControl>
