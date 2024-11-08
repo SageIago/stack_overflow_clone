@@ -72,8 +72,9 @@ export interface GetQuestionByIdParams {
 export interface QuestionVoteParams {
   questionId: string;
   userId: string;
-  hasupVoted: string;
-  hasdownVoted: string;
+  hasupVoted: boolean;
+  hasdownVoted: boolean;
+  path: string;
 }
 
 export interface DeleteQuestionParams {

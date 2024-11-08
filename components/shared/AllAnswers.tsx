@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Filter from "./Filter";
 import ParseHTML from "./ParseHTML";
+import Votes from "./Votes";
 
 interface Props {
   questionId: string;
@@ -46,16 +47,16 @@ const AllAnswers = async ({
                   className="flex flex-1 items-start gap-1"
                 >
                   <Image
-                    src={`${answer?.author?.clerkId}`}
-                    alt={`${answer?.author?.name}`}
+                    src={answer?.author?.picture}
+                    alt={answer?.author?.name}
                     width={18}
                     height={18}
                     className="rounded-full"
                   />
 
                   <div className="flex flex-col sm:flex-row sm:items-center">
-                    <p className="body-semibold text-dark300_light700">
-                      {answer?.author?.name}
+                    <p className="body-semibold mr-2 text-dark-300 dark:text-light-700">
+                      <p>{answer?.author?.name}</p>
                     </p>
 
                     <p className="small-regular text-light400_light500 mt-0.5 line-clamp-1">
@@ -65,13 +66,23 @@ const AllAnswers = async ({
                     </p>
                   </div>
                 </Link>
-
-                <div className="flex justify-end">
-                </div>
               </div>
-
+              <div className="flex justify-end">
+                  <Votes
+                    type={"Answer"}
+                    itemId={JSON.stringify(answer?._id)}
+                    userId={JSON.stringify(userId)}
+                    upvotes={answer?.upvotes?.length}
+                    hasupVoted={answer?.upvotes?.includes(userId)}
+                    downvotes={answer?.downvotes?.length}
+                    hasdownVoted={answer?.downvotes?.includes(userId)}
+                  />
+                </div>
             </div>
+
+            <div className="text-dark-200 dark:text-light-800">
               <ParseHTML data={answer?.content} />
+            </div>
           </article>
         ))}
       </div>

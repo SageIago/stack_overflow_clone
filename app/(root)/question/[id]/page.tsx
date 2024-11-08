@@ -33,7 +33,7 @@ const page = async ({
 
   let mongoUser;
 
-  if (!clerkId) {
+  if (clerkId) {
     mongoUser = await getUserById({ userId: clerkId });
   }
   return (
@@ -45,26 +45,27 @@ const page = async ({
             className="flex items-center justify-start gap-1"
           >
             <Image
-              src={`${result?.author?.picture}`}
-              alt={`${result?.author?.name} Profile`}
+              src={result?.author?.picture}
+              alt={"Profile"}
               width={22}
               height={22}
               className="rounded-full"
             />
 
-            <p className="paragraph-semibold text-dark300_light700">
+            <p className="paragraph-semibold text-dark300_light700 ml-2">
               {result?.author?.name}
             </p>
           </Link>
 
           <div className="flex justify-end">
             <Votes
-              type={"question"}
-              itemId={JSON.stringify(mongoUser?._id)}
+              type={"Question"}
+              itemId={JSON.stringify(result?._id)}
+              userId={JSON.stringify(mongoUser?._id)}
               upvotes={result?.upvotes?.length}
-              hasUserUpvoted={result?.upvotes?.includes(mongoUser?._id)}
+              hasupVoted={result?.upvotes?.includes(mongoUser?._id)}
               downvotes={result?.downvotes?.length}
-              hasUserDownvoted={result?.downvotes?.includes(mongoUser?._id)}
+              hasdownVoted={result?.downvotes?.includes(mongoUser?._id)}
               hasSaved={mongoUser?.saved?.includes(result?._id)}
             />
           </div>
@@ -113,7 +114,7 @@ const page = async ({
 
       <AllAnswers
         questionId={result?._id}
-        userId={JSON.stringify(mongoUser?._id)}
+        userId={mongoUser?._id}
         totalAnswers={result?.answers.length}
       />
 

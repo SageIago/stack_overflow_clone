@@ -47,7 +47,7 @@ const Answer = ({authorId, questionId, question }: AnswerProps) => {
     try {
       
       await CreateAnswer({
-        content: data.answer,
+        content: data?.answer,
         author: JSON.parse(authorId),
         question: JSON.parse(questionId),
         path: pathname
@@ -55,13 +55,15 @@ const Answer = ({authorId, questionId, question }: AnswerProps) => {
 
       form.reset()
 
-      if(!editorRef.current) {
+      if(editorRef.current) {
         const editor = editorRef.current as any
 
         editor.setContent("")
       }
     } catch (error) {
        throw new Error("Answer has not been Submitted...") 
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
