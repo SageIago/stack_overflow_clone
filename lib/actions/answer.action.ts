@@ -40,8 +40,6 @@ export async function GetAllAnswers(params: GetAnswerParams) {
     const Answers = await Answer.find({ question: questionId })
       .populate("author", "_id clerkId picture name")
       .sort({ createdAt: -1 });
-      
-      console.log(Answers)
 
 
     return { Answers };

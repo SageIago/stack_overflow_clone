@@ -9,9 +9,12 @@ import {
   GetQuestionParams,
   GetQuestionByIdParams,
   QuestionVoteParams,
+  ToggleSaveQuestionParams,
+  GetSavedQuestionsParams,
 } from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
+import { FilterQuery } from "mongoose";
 
 export async function GetQuestions(params: GetQuestionParams) {
   try {
@@ -21,7 +24,7 @@ export async function GetQuestions(params: GetQuestionParams) {
     const questions = await Question.find({})
       .populate({ path: "tags", model: Tag })
       .populate({ path: "author", model: User })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 });
 
     return { questions };
   } catch (error) {
@@ -38,7 +41,7 @@ export async function CreateQuestion(params: CreateQuestionParams) {
 
     // Destructure the params
 
-    const { title, content, tags, author, path} = params;
+    const { title, content, tags, author, path } = params;
 
     // Create a new Question
     const question = await Question.create({
@@ -92,12 +95,11 @@ export async function GetQuestionById(params: GetQuestionByIdParams) {
         select: "_id clerkId name picture",
       });
 
-      return specificQuestions
+    return specificQuestions;
   } catch (error) {
     console.log(error);
   }
 }
-
 
 export async function UpvoteQuestion(params: QuestionVoteParams) {
   try {
@@ -105,31 +107,34 @@ export async function UpvoteQuestion(params: QuestionVoteParams) {
 
     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
-    let updateQuery = {}
+    let updateQuery = {};
 
-    if(hasupVoted) {
-      updateQuery = { $pull: { upvotes: userId } }
-    } else if(hasdownVoted) {
-      updateQuery = { $pull: { downvotes: userId }, $push: { upvotes: userId } }
+    if (hasupVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasdownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
     } else {
-      updateQuery = { $addToSet: { upvotes: userId } }
+      updateQuery = { $addToSet: { upvotes: userId } };
     }
 
-    const question = await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
 
     // Increment the Author's Karma
 
-    if(!question) {
-      throw new Error("Question not found") 
+    if (!question) {
+      throw new Error("Question not found");
     }
 
-    revalidatePath(path)
-
-  } catch(error) {
-    console.log(error)
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
   }
 }
-
 
 export async function DownVoteQuestion(params: QuestionVoteParams) {
   try {
@@ -138,24 +143,103 @@ export async function DownVoteQuestion(params: QuestionVoteParams) {
     // Destructure the params
     const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
-    let updateQuery = {}
+    let updateQuery = {};
 
-    if(hasdownVoted) {
-      updateQuery = { $pull: { downvotes: userId } }
-    } else if(hasupVoted) {
-      updateQuery = { $pull: { upvotes: userId }, $push: { downvotes: userId } }
+    if (hasdownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasupVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
     } else {
-      updateQuery = { $addToSet: { downvotes: userId } }
+      updateQuery = { $addToSet: { downvotes: userId } };
     }
 
-    const question = await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
 
-
-    if(!question) {
-      throw new Error("Question not found")
+    if (!question) {
+      throw new Error("Question not found");
     }
-    revalidatePath(path)
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function ToggleSavedQuestion(params: ToggleSaveQuestionParams) {
+  try {
+    ConnectToDatabase();
+
+    // Destructure the params
+    const { userId, questionId, path } = params;
+
+    // YOU FIND THE USER THAT IS SAVING IT FIRST
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User Not Found!");
+    }
+
+    const isQuestionSaved = user.saved.includes(questionId);
+
+    if (isQuestionSaved) {
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: { saved: questionId },
+        },
+        { new: true }
+      );
+    } else {
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $addToSet: { saved: questionId },
+        },
+        { new: true }
+      );
+    }
+    revalidatePath(path);
+  } catch (error) {
+    throw new Error("Question has not been saved!.");
+  }
+}
+
+export async function GetSavedQuestions(params: GetSavedQuestionsParams) {
+  try {
+    ConnectToDatabase();
+
+    const { clerkId, searchQuery } = params;
+
+    const query: FilterQuery<typeof Question> = searchQuery
+      ? { title: { $regex: new RegExp(searchQuery, "i") } }
+      : {};
+
+    const user = await User.findOne({ clerkId }).populate({
+      path: "saved",
+      match: query,
+      options: {
+        // This is for sorting out the newest contents saved
+        sort: { createdAt: -1 },
+      },
+      populate: [{
+        path: "tags", model: Tag, select: "_id name"
+      }, {
+        path: "author", model: User, select: "_id clerkId name picture"
+      }]
+    });
+
+    if(!user) {
+      throw new Error("User not found");
+    }
+
+    const savedQuestions = user.saved;
+
+    return { questions: savedQuestions };
+  } catch (error) {
+    throw new Error("Get All Saved Questions Failed...");
   }
 }

@@ -9,7 +9,7 @@ import StarFilledIcon from "@/app/public/assets/icons/star-filled.svg"
 import StarRedIcon from "@/app/public/assets/icons/star-red.svg"
 import DownVotedIcon from "@/app/public/assets/icons/downvoted.svg";
 import { formatNumber } from "@/lib/utils";
-import { DownVoteQuestion, UpvoteQuestion } from "@/lib/actions/question.action";
+import { DownVoteQuestion, UpvoteQuestion, ToggleSavedQuestion } from "@/lib/actions/question.action";
 import { usePathname } from "next/navigation"; 
 import { DownvoteAnswer, UpvoteAnswer } from "@/lib/actions/answer.action";
 
@@ -94,8 +94,12 @@ const Votes = ({
         
   }
 
-  function handleSave() {
-
+  async function handleSave() {
+      await ToggleSavedQuestion({
+        userId: JSON.parse(userId),
+        questionId: JSON.parse(itemId),
+        path: pathname
+      })
   }
 
   return (
@@ -137,14 +141,16 @@ const Votes = ({
         </div>
       </div>
 
-      <Image
-        src={hasSaved ? StarFilledIcon : StarRedIcon}
-        alt="Star"
-        width={18}
-        height={18}
-        className="cursor-pointer"
-        onClick={handleSave}
-      />
+      {type !== "Answer" && (
+         <Image
+         src={hasSaved ? StarFilledIcon : StarRedIcon}
+         alt="Star"
+         width={18}
+         height={18}
+         className="cursor-pointer"
+         onClick={handleSave}
+       />
+      ) }
     </div>
   );
 };
