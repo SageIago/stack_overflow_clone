@@ -2,6 +2,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect } from "react"
 import UpvotedIcon from "@/app/public/assets/icons/upvoted.svg";
 import UpVoteIcon from "@/app/public/assets/icons/upvote.svg";
 import DownVoteIcon from "@/app/public/assets/icons/downvote.svg";
@@ -9,9 +10,11 @@ import StarFilledIcon from "@/app/public/assets/icons/star-filled.svg"
 import StarRedIcon from "@/app/public/assets/icons/star-red.svg"
 import DownVotedIcon from "@/app/public/assets/icons/downvoted.svg";
 import { formatNumber } from "@/lib/utils";
+import { ViewQuestion } from "@/lib/actions/interaction.action";
 import { DownVoteQuestion, UpvoteQuestion, ToggleSavedQuestion } from "@/lib/actions/question.action";
 import { usePathname } from "next/navigation"; 
 import { DownvoteAnswer, UpvoteAnswer } from "@/lib/actions/answer.action";
+import { useRouter } from "next/router";
 
 interface VotesProps {
   type: string;
@@ -36,6 +39,7 @@ const Votes = ({
 }: VotesProps) => {
 
   const pathname = usePathname()
+  const router = useRouter()
 
   async function handleVotes(action: string) {
     if(!userId) {
@@ -86,12 +90,7 @@ const Votes = ({
           path: pathname
         })
       }
-    }
-    
-
-  
-
-        
+    }    
   }
 
   async function handleSave() {
@@ -101,6 +100,14 @@ const Votes = ({
         path: pathname
       })
   }
+
+  useEffect(()=> {
+    ViewQuestion({
+      questionId: JSON.parse(itemId),
+      userId: userId ? JSON.parse(userId) : undefined,
+    })
+
+  }, [itemId, userId, pathname, router])
 
   return (
     <div className="flex gap-5">

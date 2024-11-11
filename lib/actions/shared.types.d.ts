@@ -96,9 +96,11 @@ export interface GetAllTagsParams {
   searchQuery?: string;
 }
 
-export interface GetQuestionByTagIdParams {
-  userId: string;
-  limit?: number;
+export interface GetQuestionsByTagIdParams {
+  tagId: string
+  page?: number
+  pageSize?: number;
+  searchQuery?: string;
 }
 
 export interface CreateUserParams {

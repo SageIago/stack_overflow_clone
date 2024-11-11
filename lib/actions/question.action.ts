@@ -59,7 +59,7 @@ export async function CreateQuestion(params: CreateQuestionParams) {
         // The first params allows us to find something(Filter)
         { name: { $regex: new RegExp(`^${tag}$`, "i") } }, // the i flag makes it case-insensitive
         // The second paramters allows us to modify its contents(Update)
-        { $setOnInsert: { name: tag }, $push: { question: question._id } },
+        { $setOnInsert: { name: tag }, $push: { questions: question._id } },
         // The third parameter allows us to  provide additional options
         { upsert: true, new: true }
       );
