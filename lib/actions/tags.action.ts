@@ -63,9 +63,9 @@ export async function GetQuestionsByTagId(params: GetQuestionsByTagIdParams) {
                 throw new Error("Tag not found")
             }
 
-            const Questions = tag.questions
+            const questions = tag.questions
 
-            return { TagTitle: tag.name , Questions }
+            return { TagTitle: tag.name , questions }
 
         } catch (error) {
             console.log(error)

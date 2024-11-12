@@ -18,13 +18,19 @@ export async function ViewQuestion(params: ViewQuestionParams) {
     if (userId) {
       const existingInteraction = await Interaction.findOne({
         user: userId,
-        question: questionId,
         action: "view",
+        question: questionId,
       });
 
       if (existingInteraction) {
         return console.log("Already Viewed");
       }
+
+      await Interaction.create({
+        user: userId,
+        action: "view",
+        question: questionId,
+      })
     }
   } catch (error) {
     console.log(error);

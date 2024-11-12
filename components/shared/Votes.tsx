@@ -12,9 +12,8 @@ import DownVotedIcon from "@/app/public/assets/icons/downvoted.svg";
 import { formatNumber } from "@/lib/utils";
 import { ViewQuestion } from "@/lib/actions/interaction.action";
 import { DownVoteQuestion, UpvoteQuestion, ToggleSavedQuestion } from "@/lib/actions/question.action";
-import { usePathname } from "next/navigation"; 
+import { usePathname, useRouter } from "next/navigation"; 
 import { DownvoteAnswer, UpvoteAnswer } from "@/lib/actions/answer.action";
-import { useRouter } from "next/router";
 
 interface VotesProps {
   type: string;
@@ -107,7 +106,7 @@ const Votes = ({
       userId: userId ? JSON.parse(userId) : undefined,
     })
 
-  }, [itemId, userId, pathname, router])
+  }, [itemId, userId, router, pathname])
 
   return (
     <div className="flex gap-5">
