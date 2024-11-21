@@ -2,10 +2,13 @@
 "use server";
 
 import User from "@/database/user.model";
+import Answer from "@/database/answer.model";
 import { ConnectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
   DeleteUserParams,
+  GetUserByIdParams,
+  GetUserStatsParams,
   UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
@@ -90,5 +93,51 @@ export async function getAllUsers() {
     return { users };
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function getUserInfo(params: GetUserByIdParams) {
+  try {
+    ConnectToDatabase();
+
+    const { userId } = params;
+
+    const user = await User.findOne({ clerkId: userId });
+
+    if(!user) {
+      throw new Error("User not found");
+    }
+
+    const totalQuestions = await Question.countDocuments({ author: user._id });
+    const totalAnswers = await Answer.countDocuments({ author: user._id }); 
+
+
+    return {
+      user,
+      totalQuestions,
+      totalAnswers
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function GetUserQuestions(params: GetUserStatsParams) {
+  try {
+    ConnectToDatabase();
+
+    const { userId } = params;
+
+    const TotalQuestions = await Question.countDocuments({ author: userId });
+
+    // Get the Questions
+    const GetAllUserQuestions = await Question.find({ author: userId }).sort({ views:-1, upvotes: -1 }).populate("tags", "_id name")
+    .populate("author", "_id clerkId name picture")
+
+
+    return { TotalQuestions, questions: GetAllUserQuestions };
+  } catch (error) {
+    console.log(error)
   }
 }

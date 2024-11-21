@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import Login1 from "@/app/public/assets/icons/account.svg";
 import Login2 from "@/app/public/assets/icons/sign-up.svg";
 import { sidebarLinks } from "@/constants";
-import { SignedOut } from "@clerk/nextjs";
+import { SignedOut, useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LeftSidebar = () => {
+  const { userId } = useAuth()
   const pathname = usePathname();
   return (
     <aside className="background-light900_dark200 light-border custom-scrollbar no-scrollbar sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
@@ -18,6 +19,14 @@ const LeftSidebar = () => {
           const isActive =
             (pathname.includes(links.route) && links.route.length > 1) ||
             pathname === links.route;
+
+            if(links.route === "/profile" ) {
+              if(userId) {
+                links.route = `/profile/${userId}`
+              } else {
+                return null
+              }
+            } 
           return (
             <Link
               key={index}

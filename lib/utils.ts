@@ -44,3 +44,11 @@ export function ShortenUsername(username: string): string {
     : String(username);
 }
 
+export function getDateJoined(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long' };
+
+
+  return date?.toLocaleDateString('en-US', options);
+}
+
+
